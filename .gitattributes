@@ -2,6 +2,7 @@
 /.github/ export-ignore
 /.gitignore export-ignore
 /.laminas-ci.json export-ignore
+/.markdownlint.json
 /composer.lock export-ignore
 /examples export-ignore
 /phpcs.xml export-ignore
