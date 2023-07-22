@@ -1,9 +1,5 @@
 <?php
 
-/**
- * File level docblock to avoid PSR12.Files.FileHeader.IncorrectOrder when class is `readonly`, not `final readonly`
- */
-
 declare(strict_types=1);
 
 namespace Kynx\ApiKey;
@@ -13,10 +9,13 @@ use function preg_quote;
 use function sprintf;
 
 /**
+ * @deprecated Backwards-compatibility for 1.x-2.x migration. Will be removed in next major.
+ *
  * @psalm-pure
- * @final
+ * @psalm-suppress InvalidExtendClass
+ * @psalm-suppress MethodSignatureMismatch
  */
-readonly class ApiKey
+final readonly class BcApiKey extends ApiKey
 {
     private string $checksum;
     private string $key;
