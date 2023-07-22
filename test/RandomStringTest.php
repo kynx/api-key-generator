@@ -39,4 +39,12 @@ final class RandomStringTest extends TestCase
             'characters' => [100, 'aBbB12'],
         ];
     }
+
+    public function testGetCharactersReturnsConstructorArg(): void
+    {
+        $expected     = 'abc123';
+        $randomString = new RandomString($expected);
+        $actual       = $randomString->getCharacters();
+        self::assertSame($expected, $actual);
+    }
 }

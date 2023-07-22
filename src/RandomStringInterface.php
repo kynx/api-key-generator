@@ -10,4 +10,6 @@ interface RandomStringInterface
      * Returns random string of given length
      */
     public function generate(int $length): string;
+
+    public function getCharacters(): string;
 }

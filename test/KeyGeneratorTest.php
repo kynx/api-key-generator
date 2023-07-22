@@ -32,6 +32,11 @@ final class KeyGeneratorTest extends TestCase
             {
                 return str_pad('', $length, 'a');
             }
+
+            public function getCharacters(): string
+            {
+                return 'a';
+            }
         };
         $this->generator = new KeyGenerator('phpunit', 8, 16, $randomString);
     }
@@ -86,8 +91,10 @@ final class KeyGeneratorTest extends TestCase
             'invalid identifier' => ['phpunit_aaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2', null],
             'invalid secret'     => ['phpunit_aaaaaaaa_aaaaaaaaaaaaaaa_8e3c92a2', null],
             'trailing chars'     => ['phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2_a', null],
+            'trailing w space'   => ['phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2 a', null],
             'invalid checksum'   => ['phpunit_aaaaaaaa_aaaaaaaaaaaaaaab_8e3c92a2', null],
             'valid'              => ['phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2', $valid],
+            'trim'               => [" phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2\t\n", $valid],
         ];
     }
 }

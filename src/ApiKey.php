@@ -5,8 +5,12 @@ declare(strict_types=1);
 namespace Kynx\ApiKey;
 
 use function hash;
+use function preg_quote;
 use function sprintf;
 
+/**
+ * @psalm-pure
+ */
 final readonly class ApiKey
 {
     private string $checksum;
@@ -20,6 +24,22 @@ final readonly class ApiKey
         $base           = $this->getBase();
         $this->checksum = $this->checksum($base);
         $this->key      = $base . $this->checksum;
+    }
+
+    public static function getRegExp(
+        string $characters,
+        string $prefix,
+        int $identifierLength,
+        int $secretLength
+    ): string {
+        $characters = preg_quote($characters);
+
+        return '#^'
+            . preg_quote($prefix)
+            . '_(?P<identifier>[' . $characters . ']{' . $identifierLength . '})'
+            . '_(?P<secret>[' . $characters . ']{' . $secretLength . '})'
+            . '_(?P<checksum>[0-9a-f]{8})'
+            . '$#';
     }
 
     public function matches(string $checksum): bool

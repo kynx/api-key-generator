@@ -24,4 +24,9 @@ final readonly class RandomString implements RandomStringInterface
     {
         return $this->generator->generateString($length, $this->characters);
     }
+
+    public function getCharacters(): string
+    {
+        return $this->characters;
+    }
 }

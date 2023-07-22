@@ -4,17 +4,15 @@ declare(strict_types=1);
 
 namespace Kynx\ApiKey;
 
-use Kynx\ApiKey\InvalidArgumentException;
-
-use function sscanf;
-use function strlen;
+use function preg_match;
+use function trim;
 
 final readonly class KeyGenerator implements KeyGeneratorInterface
 {
     private const MIN_IDENTIFIER_LENGTH = 8;
     private const MIN_SECRET_LENGTH     = 16;
 
-    private string $format;
+    private string $regexp;
 
     public function __construct(
         private string $prefix,
@@ -35,10 +33,12 @@ final readonly class KeyGenerator implements KeyGeneratorInterface
             throw InvalidArgumentException::invalidSecretLength($this->secretLength, self::MIN_SECRET_LENGTH);
         }
 
-        $this->format = '%' . strlen($this->prefix) . 's'
-            . '_%' . $this->identifierLength . 's'
-            . '_%' . $this->secretLength . 's'
-            . '_%8s%s';
+        $this->regexp = ApiKey::getRegExp(
+            $this->randomString->getCharacters(),
+            $this->prefix,
+            $this->identifierLength,
+            $this->secretLength
+        );
     }
 
     public function generate(): ApiKey
@@ -52,19 +52,11 @@ final readonly class KeyGenerator implements KeyGeneratorInterface
 
     public function parse(string $apiKey): ?ApiKey
     {
-        $matched = sscanf($apiKey, $this->format, $prefix, $identifier, $secret, $checksum, $extra);
-        if ($matched !== 4) {
-            return null;
-        }
-        if ($prefix !== $this->prefix) {
+        if (! preg_match($this->regexp, trim($apiKey), $matches)) {
             return null;
         }
 
-        $parsed = new ApiKey((string) $prefix, (string) $identifier, (string) $secret);
-        if (! $parsed->matches((string) $checksum)) {
-            return null;
-        }
-
-        return $parsed;
+        $parsed = new ApiKey($this->prefix, $matches['identifier'], $matches['secret']);
+        return $parsed->matches($matches['checksum']) ? $parsed : null;
     }
 }
