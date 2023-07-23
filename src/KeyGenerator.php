@@ -9,15 +9,18 @@ use function trim;
 
 final readonly class KeyGenerator implements KeyGeneratorInterface
 {
+    public const DEFAULT_IDENTIFIER_LENGTH = 8;
+    public const DEFAULT_SECRET_LENGTH     = 32;
+
     private const MIN_IDENTIFIER_LENGTH = 8;
-    private const MIN_SECRET_LENGTH     = 16;
+    private const MIN_SECRET_LENGTH     = 24;
 
     private string $regexp;
 
     public function __construct(
         private string $prefix,
-        private int $identifierLength = 8,
-        private int $secretLength = 16,
+        private int $identifierLength = self::DEFAULT_IDENTIFIER_LENGTH,
+        private int $secretLength = self::DEFAULT_SECRET_LENGTH,
         private RandomStringInterface $randomString = new RandomString(),
     ) {
         if ($this->prefix === '') {
