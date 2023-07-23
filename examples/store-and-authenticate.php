@@ -7,9 +7,9 @@
  *
  * CREATE TABLE apikeys (
  *     id INT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
- *     identifier VARCHAR(8) NOT NULL,
+ *     identifier VARBINARY(255) NOT NULL,
  *     hash VARCHAR(255) NOT NULL,
- *     UNIQUE INDEX apikeys_identity_ux (identifier)
+ *     UNIQUE INDEX apikeys_identifier_udx (identifier)
  * )
  */
 

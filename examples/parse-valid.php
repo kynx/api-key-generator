@@ -11,7 +11,7 @@ use Kynx\ApiKey\KeyGenerator;
 require '../vendor/autoload.php';
 
 $generator = new KeyGenerator('xyz_sandbox');
-$apiKey    = $generator->parse('xyz_sandbox_PudLoQjP_N227Oh5hz48h4FQM_e07f9ca3');
+$apiKey    = $generator->parse('xyz_sandbox_miWh6l3ftyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y_dab13e9d');
 if ($apiKey === null) {
     echo "Invalid key!\n";
 } else {

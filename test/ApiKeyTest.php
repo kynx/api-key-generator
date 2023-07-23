@@ -19,8 +19,8 @@ final class ApiKeyTest extends TestCase
     {
         $prefix     = 'phpunit';
         $identifier = 'aaaaaaaa';
-        $secret     = 'aaaaaaaaaaaaaaaa';
-        $checksum   = '8e3c92a2';
+        $secret     = 'aaaaaaaaaaaaaaaaaaaaaaaa';
+        $checksum   = '4c890bb3';
 
         $apiKey = new ApiKey($prefix, $identifier, $secret);
         self::assertSame($prefix, $apiKey->getPrefix());
@@ -31,37 +31,37 @@ final class ApiKeyTest extends TestCase
 
     public function testMatchesReturnsTrue(): void
     {
-        $apiKey = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaa');
-        $actual = $apiKey->matches('8e3c92a2');
+        $apiKey = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaa');
+        $actual = $apiKey->matches('4c890bb3');
         self::assertTrue($actual);
     }
 
     public function testMatchesReturnsFalse(): void
     {
-        $apiKey = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaab');
-        $actual = $apiKey->matches('8e3c92a2');
+        $apiKey = new ApiKey('phpunit', 'aaaaaaaa', 'Zaaaaaaaaaaaaaaaaaaaaaaa');
+        $actual = $apiKey->matches('4c890bb3');
         self::assertFalse($actual);
     }
 
     public function testGetKeyReturnsKey(): void
     {
-        $expected = 'phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2';
-        $apiKey   = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaa');
+        $expected = 'phpunit_aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa_4c890bb3';
+        $apiKey   = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaaaaaaaaaa');
         $actual   = $apiKey->getKey();
         self::assertSame($expected, $actual);
     }
 
     public function testGetRegexpReturnsValidRegexp(): void
     {
-        $expected = '#^a\\.\\#_(?P<identifier>[a\?\(]{8})_(?P<secret>[a\?\(]{16})_(?P<checksum>[0-9a-f]{8})$#';
-        $actual   = ApiKey::getRegExp('a?(', 'a.#', 8, 16);
+        $expected = '#^a\\.\\#_(?P<identifier>[a\?\(]{8})(?P<secret>[a\?\(]{24})_(?P<checksum>[0-9a-f]{8})$#';
+        $actual   = ApiKey::getRegExp('a?(', 'a.#', 8, 24);
         self::assertSame($expected, $actual);
 
         $prefix     = 'a.#';
         $identifier = 'a?(a?(a?';
-        $secret     = 'a?(a?(a?(a?a?(a?';
-        $checksum   = '99e78e35';
-        $key        = sprintf('%s_%s_%s_%s', $prefix, $identifier, $secret, $checksum);
+        $secret     = 'a?(a?(a?(a?(a?(a?(a?(a?(';
+        $checksum   = 'f329e146';
+        $key        = sprintf('%s_%s%s_%s', $prefix, $identifier, $secret, $checksum);
         $matched    = preg_match($actual, $key, $matches);
         self::assertSame(1, $matched);
 

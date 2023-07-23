@@ -40,9 +40,9 @@ readonly class ApiKey
         $characters = preg_quote($characters);
 
         return '#^'
-            . preg_quote($prefix)
-            . '_(?P<identifier>[' . $characters . ']{' . $identifierLength . '})'
-            . '_(?P<secret>[' . $characters . ']{' . $secretLength . '})'
+            . preg_quote($prefix) . '_'
+            . '(?P<identifier>[' . $characters . ']{' . $identifierLength . '})'
+            . '(?P<secret>[' . $characters . ']{' . $secretLength . '})'
             . '_(?P<checksum>[0-9a-f]{8})'
             . '$#';
     }
@@ -80,7 +80,7 @@ readonly class ApiKey
     private function getBase(): string
     {
         return sprintf(
-            '%s_%s_%s_',
+            '%s_%s%s_',
             $this->prefix,
             $this->identifier,
             $this->secret

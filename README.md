@@ -14,7 +14,7 @@ An API key should:
 * Be secure (OK, that's a little obvious...)
 * Not leak any details about the user identity it is tied to
 * Be easy to store securely and validate against a persistence layer
-* Be traceable in case some idiot checks one into VCS - for instance, via [GitHub's Secret Scanning]
+* Be traceable in case some idiot checks one into VCS - for instance, using [GitHub's Secret Scanning]
 * Provide a way to quickly reject obviously malformed keys without hitting the persistence layer
 * Contain human-readable information so end users / support can easily see if they are using the right key
 * Be easy to copy-and-paste from a UI into the consuming application
@@ -46,7 +46,7 @@ echo $apiKey->getKey() . "\n";
 This will output something like:
 
 ```text
-xyz_sandbox_PudLoQjP_N227Oh5hz48h4FQM_e07f9ca3
+xyz_sandbox_miWh6l3ftyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y_dab13e9d
 ```
 
 See the [examples] directory for code showing how to modify the key strength, change the characters used, etc.
@@ -59,7 +59,7 @@ use Kynx\ApiKey\KeyGenerator;
 require 'vendor/autoload.php';
 
 $generator = new KeyGenerator('xyz_sandbox');
-$apiKey    = $generator->parse('xyz_sandbox_PudLoQjP_N227Oh5hz48h4FQM_e07f9ca3');
+$apiKey    = $generator->parse('xyz_sandbox_miWh6l3ftyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y_dab13e9d');
 if ($apiKey === null) {
     echo "Invalid key!\n";
 } else {
@@ -71,8 +71,8 @@ if ($apiKey === null) {
 Since the key is well-formed, this will output:
 
 ```text
-Identifier : PudLoQjP
-Secret     : N227Oh5hz48h4FQM
+Identifier : miWh6l3f
+Secret     : tyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y
 ```
 
 Now make a random change to the key. The `parse()` method will return `null` and you will see the`Invalid key!`
@@ -101,12 +101,12 @@ $primary  = new KeyGenerator($newPrefix);
 $fallback = new KeyGenerator($oldPrefix);
 $chain    = new KeyGeneratorChain($primary, $fallback);
 
-$oldKey = $chain->parse('xyz_sandbox_PudLoQjP_N227Oh5hz48h4FQM_e07f9ca3');
+$oldKey = $chain->parse('xyz_sandbox_miWh6l3ftyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y_dab13e9d');
 if ($oldKey !== null) {
     echo "Old key parsed\n";
 }
 
-$newKey = $chain->parse('abc_sandbox_3Lccf2o1_keSjaHiLf2jcpCPN_309c4f27');
+$newKey = $chain->parse('abc_sandbox_miWh6l3ftyzi9TRmpZeJ4nU3LpBF5T37FguT1p4y_dab13e9d');
 if ($newKey !== null) {
     echo "New key parsed\n";
 }
@@ -118,48 +118,81 @@ returned, or `null` if none match. See [parse-chain] for a more complete example
 
 ## API Key Structure
 
-You will notice in the examples above that the generated key is composed of four parts separated by underscores. They
+You will notice in the examples above that the generated key is composed of three parts separated by underscores. They
 are:
 
 ```text
-<prefix>_<identifier>_<secret>_<checksum>
+<prefix>_<identifier><secret>_<checksum>
 ```
 
 ### Prefix
 
-The `prefix` is always the first argument passed to the constructor. It is there to make your key easy to recognise,
-both to end users and to secret scanners that use a regex for find leaked keys in the wild. In the examples we've used a
-company identifier (`xyz`) plus a string indicating whether it's for use in our `production` or `sandbox` environments.
-If you've ever integrated with Stripe you will be familiar with this pattern, but you are free to use whatever format
-suits.
+The `prefix` is always what you passed as the first argument passed to the KeyGenerator constructor. It is there to make
+your key easy to recognise, both to end users and to secret scanners that find leaked keys in the wild. In the examples
+we've used a company identifier (`xyz`) plus a string indicating whether it's for use in our `production` or `sandbox`
+environments. If you've ever integrated with Stripe you will be familiar with this pattern, but you are free to use
+whatever format makes sense.
 
 ### Identifier
 
-The `identifier` is a random string that can be used to look up the secret in a database. Store this un-hashed and put
-a unique constraint on it. The generated identifiers are _not_ guaranteed to be unique, so when inserting into the
-database your should be prepared to catch the constraint violation, generate a new key and re-try.
+The `identifier` is a random string that can be used to look up the secret in a database. Store this un-hashed in a
+case-sensitive column (for example, `VARBINARY` in MySQL) and put a unique constraint on it. The generated identifiers
+are _not_ guaranteed to be unique, so when inserting into the database your should be prepared to catch the constraint
+violation, generate a new key and re-try. See [store-and-authenticate] for an example.
 
 ### Secret
 
-The `secret` part provides the security. This _must_ be hashed (using PHP's [password_hash()]) before storing. See the
+The `secret` part provides the security. This **must** be hashed (using PHP's [password_hash()]) before storing. See the
 [store-and-authenticate] example code if you are unsure how to do this.
 
 ### Checksum
 
 Finally the `checksum` is a `crc32b` hash of the rest of the key. It is there to quickly filter out garbage hitting your
-API, without needing to bother your persistence layer. Just because it matches _does not_ mean the user is
+API, without needing to bother your persistence layer. Just because it matches does **not** mean the user can be
 authenticated! You still need to check the identifier and secret against what you stored when the key was generated.
 
 ### Defaults
 
-By default the `identifier` is 8 characters long. You can reduce the risk of collisions by increasing this. By default
-the `secret` is 16 characters long. You can improve the security of your API by increasing this. See the
+By default the `identifier` is 8 characters long. With the default characters this gives `pow(59, 8) - 1` combinations. Even with
+millions of keys in storage the risk of collisions is tiny. Given that API keys are only really suitable for
+organisation-level access control, this should be plenty. But if needed you can increase it.
+
+By default the `secret` is 32 characters long. You can improve the security of your API by increasing this. See the
 [generate-secure] example.
 
-By default the generated part of the key is composed of the characters `[a-zA-Z0-9_]` and you should ensure your
-`prefix` is too: this makes it easy to copy it from your key management console. Try double-clicking on
+By default the generated part of the key is composed of the characters `[a-zA-Z0-9_]`. You should ensure your `prefix`
+is too: this makes it easy to copy it from your key management console. Try double-clicking on
 `xyz-sandbox_Pu!Lo&jP_N22/Oh5hz48h4.QM_e07f9ca3` to see what happens when other characters are present. If you want more
 entropy, make your secret longer.
+
+## Upgrading
+
+## 1.x -> 2.x
+
+In 1.x the default secret key length was 16 characters. Much as I hate BC breaks, this was too low for a library
+advocating best practice. In 2.x the default is 32 and the minimum is 24. I think it is better to fix this mistake
+early.
+
+To upgrade without breaking existing keys you will need to use the `KeyGeneratorChain` along with a BC generator for
+parsing the old keys:
+
+```php
+use Kynx\ApiKey\BcKeyGenerator;
+use Kynx\ApiKey\KeyGenerator;
+use Kynx\ApiKey\KeyGeneratorChain;
+
+require 'vendor/autoload.php';
+
+$primary  = new KeyGenerator('xyz_sandbox');
+$fallback = new BcKeyGenerator('xyz_sandbox');
+$chain    = new KeyGeneratorChain($primary, $fallback);
+
+$newKey = $chain->generate(); // get a new 2.x key
+$oldKey = $chain->parse('xyz_sandbox_PudLoQjP_N227Oh5hz48h4FQM_e07f9ca3'); // 1.x key still parsed
+```
+
+The `BcKeyGenerator` cannot be used for generating new keys, only for parsing old ones. It and the associated `BcApiKey`
+are deprecated will be dropped in version 3.x.
 
 ## Further reading
 
@@ -167,6 +200,7 @@ entropy, make your secret longer.
   useful information on managing and rotating keys.
 * <https://blog.mergify.com/api-keys-best-practice/> Covers much of the same ground, but the checklist at the end is
   useful for evaluating and API key security. People will be evaluating yours!
+* <https://cheatsheetseries.owasp.org/cheatsheets/Key_Management_Cheat_Sheet.html> OWASP Key Management cheat sheet.
 
 [GitHub's Secret Scanning]: https://docs.github.com/en/code-security/secret-scanning/about-secret-scanning
 [examples]: ./examples
