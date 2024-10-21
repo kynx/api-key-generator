@@ -19,6 +19,7 @@ final readonly class BcKeyGenerator implements KeyGeneratorInterface
     private const MIN_IDENTIFIER_LENGTH = 8;
     private const MIN_SECRET_LENGTH     = 16;
 
+    /** @var non-empty-string */
     private string $regexp;
 
     public function __construct(
