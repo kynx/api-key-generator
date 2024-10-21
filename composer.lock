@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "9ef2c2e4cf378ece0f77a904add33b07",
+    "content-hash": "89e035b0ff1e6c62067bc63ee896f5cc",
     "packages": [
         {
             "name": "ircmaxell/random-lib",
