@@ -30,6 +30,9 @@ final readonly class BcApiKey extends ApiKey
         $this->key      = $base . $this->checksum;
     }
 
+    /**
+     * @return non-empty-string
+     */
     public static function getRegExp(
         string $characters,
         string $prefix,
