@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "921e55f08dd89bc802b79ce9b26e71a4",
+    "content-hash": "0570749a746bb66c60ab4495e167c4d6",
     "packages": [
         {
             "name": "ircmaxell/random-lib",
@@ -5274,7 +5274,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "~8.2.0 || ~8.3.0 || ~8.4.0"
+        "php": "~8.3.0 || ~8.4.0"
     },
     "platform-dev": {},
     "plugin-api-version": "2.6.0"
