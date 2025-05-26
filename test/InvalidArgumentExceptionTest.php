@@ -5,11 +5,10 @@ declare(strict_types=1);
 namespace KynxTest\ApiKey;
 
 use Kynx\ApiKey\InvalidArgumentException;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \Kynx\ApiKey\InvalidArgumentException
- */
+#[CoversClass(InvalidArgumentException::class)]
 final class InvalidArgumentExceptionTest extends TestCase
 {
     public function testInvalidPrefix(): void

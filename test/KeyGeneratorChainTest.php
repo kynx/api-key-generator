@@ -7,14 +7,13 @@ namespace KynxTest\ApiKey;
 use Kynx\ApiKey\ApiKey;
 use Kynx\ApiKey\KeyGeneratorChain;
 use Kynx\ApiKey\KeyGeneratorInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\MockObject\MockObject;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @uses \Kynx\ApiKey\ApiKey
- *
- * @covers \Kynx\ApiKey\KeyGeneratorChain
- */
+#[CoversClass(KeyGeneratorChain::class)]
+#[UsesClass(ApiKey::class)]
 final class KeyGeneratorChainTest extends TestCase
 {
     private KeyGeneratorInterface&MockObject $primary;

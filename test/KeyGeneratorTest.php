@@ -7,18 +7,19 @@ namespace KynxTest\ApiKey;
 use Kynx\ApiKey\ApiKey;
 use Kynx\ApiKey\InvalidArgumentException;
 use Kynx\ApiKey\KeyGenerator;
+use Kynx\ApiKey\RandomString;
 use Kynx\ApiKey\RandomStringInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 use function str_pad;
 
-/**
- * @uses \Kynx\ApiKey\ApiKey
- * @uses \Kynx\ApiKey\InvalidArgumentException
- * @uses \Kynx\ApiKey\RandomString
- *
- * @covers \Kynx\ApiKey\KeyGenerator
- */
+#[CoversClass(KeyGenerator::class)]
+#[UsesClass(ApiKey::class)]
+#[UsesClass(InvalidArgumentException::class)]
+#[UsesClass(RandomString::class)]
 final class KeyGeneratorTest extends TestCase
 {
     private KeyGenerator $generator;
@@ -69,9 +70,7 @@ final class KeyGeneratorTest extends TestCase
         self::assertEquals($expected, $actual);
     }
 
-    /**
-     * @dataProvider parseProvider
-     */
+    #[DataProvider('parseProvider')]
     public function testParse(string $apiKey, ?ApiKey $expected): void
     {
         $actual = $this->generator->parse($apiKey);

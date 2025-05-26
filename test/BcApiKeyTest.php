@@ -5,15 +5,16 @@ declare(strict_types=1);
 namespace KynxTest\ApiKey;
 
 use Kynx\ApiKey\BcApiKey;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 use function preg_match;
 use function sprintf;
 
 /**
- * @covers \Kynx\ApiKey\BcApiKey
  * @psalm-suppress DeprecatedClass
  */
+#[CoversClass(BcApiKey::class)]
 final class BcApiKeyTest extends TestCase
 {
     public function testConstructorSetsProperties(): void
