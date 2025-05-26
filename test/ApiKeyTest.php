@@ -5,14 +5,13 @@ declare(strict_types=1);
 namespace KynxTest\ApiKey;
 
 use Kynx\ApiKey\ApiKey;
+use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\TestCase;
 
 use function preg_match;
 use function sprintf;
 
-/**
- * @covers \Kynx\ApiKey\ApiKey
- */
+#[CoversClass(ApiKey::class)]
 final class ApiKeyTest extends TestCase
 {
     public function testConstructorSetsProperties(): void

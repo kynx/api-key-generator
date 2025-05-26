@@ -8,19 +8,22 @@ use Exception;
 use Kynx\ApiKey\BcApiKey;
 use Kynx\ApiKey\BcKeyGenerator;
 use Kynx\ApiKey\InvalidArgumentException;
+use Kynx\ApiKey\RandomString;
 use Kynx\ApiKey\RandomStringInterface;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\Attributes\UsesClass;
 use PHPUnit\Framework\TestCase;
 
 use function str_pad;
 
 /**
- * @uses \Kynx\ApiKey\BcApiKey
- * @uses \Kynx\ApiKey\InvalidArgumentException
- * @uses \Kynx\ApiKey\RandomString
- *
- * @covers \Kynx\ApiKey\BcKeyGenerator
  * @psalm-suppress DeprecatedClass
  */
+#[CoversClass(BcKeyGenerator::class)]
+#[UsesClass(BcApiKey::class)]
+#[UsesClass(InvalidArgumentException::class)]
+#[UsesClass(RandomString::class)]
 final class BcKeyGeneratorTest extends TestCase
 {
     private BcKeyGenerator $generator;
@@ -70,9 +73,7 @@ final class BcKeyGeneratorTest extends TestCase
         $this->generator->generate();
     }
 
-    /**
-     * @dataProvider parseProvider
-     */
+    #[DataProvider('parseProvider')]
     public function testParse(string $apiKey, ?BcApiKey $expected): void
     {
         $actual = $this->generator->parse($apiKey);

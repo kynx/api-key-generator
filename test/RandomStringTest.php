@@ -5,16 +5,14 @@ declare(strict_types=1);
 namespace KynxTest\ApiKey;
 
 use Kynx\ApiKey\RandomString;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-/**
- * @covers \Kynx\ApiKey\RandomString
- */
+#[CoversClass(RandomString::class)]
 final class RandomStringTest extends TestCase
 {
-    /**
-     * @dataProvider generateProvider
-     */
+    #[DataProvider('generateProvider')]
     public function testGenerate(int $length, ?string $characters): void
     {
         if ($characters === null) {
