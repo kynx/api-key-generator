@@ -32,7 +32,8 @@ final class KeyGeneratorChainTest extends TestCase
     public function testGenerateReturnsPrimaryApiKey(): void
     {
         $expected = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaa');
-        $this->primary->method('generate')
+        $this->primary->expects(self::once())
+            ->method('generate')
             ->willReturn($expected);
         $this->fallback->expects(self::never())
             ->method('generate');
@@ -44,7 +45,8 @@ final class KeyGeneratorChainTest extends TestCase
     public function testParseParsesPrimary(): void
     {
         $expected = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaa');
-        $this->primary->method('parse')
+        $this->primary->expects(self::once())
+            ->method('parse')
             ->willReturn($expected);
         $this->fallback->expects(self::never())
             ->method('parse');
@@ -56,9 +58,11 @@ final class KeyGeneratorChainTest extends TestCase
     public function testParseUsesFallback(): void
     {
         $expected = new ApiKey('phpunit', 'aaaaaaaa', 'aaaaaaaaaaaaaaaa');
-        $this->primary->method('parse')
+        $this->primary->expects(self::once())
+            ->method('parse')
             ->willReturn(null);
-        $this->fallback->method('parse')
+        $this->fallback->expects(self::once())
+            ->method('parse')
             ->willReturn($expected);
 
         $actual = $this->chain->parse('phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2');
@@ -67,9 +71,11 @@ final class KeyGeneratorChainTest extends TestCase
 
     public function testParseReturnsNull(): void
     {
-        $this->primary->method('parse')
+        $this->primary->expects(self::once())
+            ->method('parse')
             ->willReturn(null);
-        $this->fallback->method('parse')
+        $this->fallback->expects(self::once())
+            ->method('parse')
             ->willReturn(null);
 
         $actual = $this->chain->parse('phpunit_aaaaaaaa_aaaaaaaaaaaaaaaa_8e3c92a2');
