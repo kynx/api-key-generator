@@ -42,6 +42,9 @@
         "test-coverage": "phpunit --colors=always --coverage-clover clover.xml"
     },
     "config": {
+        "platform": {
+            "php": "8.3.99"
+        },
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true
         },
