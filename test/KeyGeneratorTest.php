@@ -44,22 +44,22 @@ final class KeyGeneratorTest extends TestCase
 
     public function testConstructInvalidPrefixThrowsException(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("'' is not a valid prefix");
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessageIsOrContains("'' is not a valid prefix");
         new KeyGenerator('');
     }
 
     public function testConstructInvalidIdentityLengthThrowsException(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Identifiers should be at least 8 characters");
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessageIsOrContains("Identifiers should be at least 8 characters");
         new KeyGenerator('foo', 1);
     }
 
     public function testConstructInvalidSecretLengthThrowsExcpetion(): void
     {
-        $this->expectException(InvalidArgumentException::class);
-        $this->expectExceptionMessage("Secrets should be at least 24 characters");
+        self::expectException(InvalidArgumentException::class);
+        self::expectExceptionMessageIsOrContains("Secrets should be at least 24 characters");
         new KeyGenerator('foo', 8, 1);
     }
 
