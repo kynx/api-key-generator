@@ -167,6 +167,11 @@ entropy, make your secret longer.
 
 ## Upgrading
 
+## 2.x -> 3.x
+
+* We have removed the `BcKeyGenerator` and associated `BcApiKey` classes.
+* `ApiKey` is now `final`. In version 2.x it was soft `@final`.
+
 ## 1.x -> 2.x
 
 In 1.x the default secret key length was 16 characters. Much as I hate BC breaks, this was too low for a library

@@ -12,11 +12,7 @@ use function hash;
 use function preg_quote;
 use function sprintf;
 
-/**
- * @psalm-pure
- * @final
- */
-readonly class ApiKey
+final readonly class ApiKey
 {
     private string $checksum;
     private string $key;
