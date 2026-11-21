@@ -1,15 +1,22 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.2/phpunit.xsd"
-         beStrictAboutOutputDuringTests="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/13.4/phpunit.xsd"
          bootstrap="vendor/autoload.php"
-         executionOrder="depends,defects"
-         failOnRisky="true"
-         failOnWarning="true"
+         executionOrder="defects"
          colors="true"
          cacheDirectory=".phpunit.cache"
          beStrictAboutCoverageMetadata="true"
->
+         beStrictAboutOutputDuringTests="true"
+         displayDetailsOnTestsThatTriggerDeprecations="true"
+         displayDetailsOnTestsThatTriggerErrors="true"
+         displayDetailsOnTestsThatTriggerWarnings="true"
+         displayDetailsOnTestsThatTriggerNotices="true"
+         failOnRisky="true"
+         failOnWarning="true"
+         failOnNotice="true"
+         failOnDeprecation="true"
+         failOnPhpunitDeprecation="true"
+         resolveDependencies="true">
   <testsuites>
     <testsuite name="default">
       <directory>test</directory>
